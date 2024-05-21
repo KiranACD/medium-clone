@@ -18,15 +18,22 @@ export const userRouter = new Hono<{
 userRouter.use("/me", async (c, next) => {
 
     const authHeader = c.req.header("authorization") || "";
-    const user = await verify(authHeader, c.env.SECRET);
-    if (user) {
-        c.set("userId", user.id);
-        await next();
-    } else {
-        c.status(403);
+    try {
+        const user = await verify(authHeader, c.env.SECRET);
+        if (user) {
+            c.set("userId", user.id);
+            await next();
+        } else {
+            c.status(403);
+            return c.json({
+                error: "You are not logged in!",
+            })
+        }
+    } catch (err) {
+        console.log(err);
         return c.json({
-            error: "You are not logged in!",
-        })
+            error: "Unauthorized",
+        });
     }
     
 });
@@ -64,7 +71,12 @@ userRouter.post('/signup', async (c) => {
       });
   
       const jwt = await sign({id: user.id}, c.env.SECRET);
-      return c.json({jwt});
+      return c.json({
+        jwt,
+        email: user.email,
+        name: user.name,
+        tagline: user.tagline,
+      });
   
     } catch (err) {
       return c.json({error:"Incomplete Registration"}, 400);
@@ -111,7 +123,12 @@ userRouter.post('/signin', async (c) => {
         });
         }
         const jwt = await sign({id: user.id}, c.env.SECRET);
-        return c.json({jwt});
+        return c.json({
+            jwt,
+            email: user.email,
+            name: user.name,
+            tagline: user.tagline,
+        });
 
     } catch (err) {
         c.status(411);
@@ -135,6 +152,7 @@ userRouter.get("/me", async (c) => {
         select: {
             name: true,
             email: true,
+            tagline: true,
         }
     });
 

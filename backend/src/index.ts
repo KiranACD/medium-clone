@@ -1,9 +1,5 @@
-import { PrismaClient } from '@prisma/client/edge';
-import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono'
-import { hashPassword } from './util/hashPassword';
-import { sign } from 'hono/jwt';
-import { signupInput } from '@kiranacd/medium-common';
+import { cors } from 'hono/cors';
 import { userRouter } from './routes/user';
 import { blogRouter } from './routes/blog';
 
@@ -13,6 +9,8 @@ const app = new Hono<{
     SECRET: string,
   }
 }>();
+
+app.use('/api/*', cors());
 
 app.route("/api/v1/user", userRouter);
 app.route("/api/v1/blog", blogRouter);
