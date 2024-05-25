@@ -5,15 +5,16 @@ import { InputField } from "./InputField";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../Config";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userAtom } from "../state/UserAtom";
+import { toast } from "react-toastify";
 
 
 
 export const SignupComponent = () => {
 
     const [signUpInputs, setSignUpInputs] = useState<SignupInput>({email: "", password: "", name: ""});
-    const [userAtomState, setUserAtomState] = useRecoilState(userAtom);
+    const setUserAtomState = useSetRecoilState(userAtom);
     const navigate = useNavigate();
 
     const onChange = (e: ChangeEvent<HTMLInputElement>, label: string) => {
@@ -30,24 +31,52 @@ export const SignupComponent = () => {
         const token = localStorage.getItem("blogToken");
         console.log(token);
         if (token) {
-            navigate("/blogs");
+            getUserDetails(token);
         }
     }, []);
+
+    const getUserDetails = async (token: string) => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
+                headers: {
+                    Authorization: token,
+                }
+            });
+            toast.success("Welcome!", {
+                toastId: "signedInSuccess",
+            });
+            const user = response.data;
+            setUserAtomState({ name: user.name, email: user.email, tagline: user.tagline, loggedIn: true });
+            navigate("/blogs");
+        } catch (err) {
+            if (err instanceof Error) {
+                toast.error(err.message, {
+                    toastId: "errorSignedin",
+                });
+            }
+        }
+    }
 
     const onClick = () => {
         sendRequest();
     }
 
     async function sendRequest() {
-        
+        const id = toast.loading("Creating your account...");
         try {
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, signUpInputs);
+            toast.success("Welcome!", {
+                toastId: "signedInSuccess",
+            });
+            toast.update(id, {render: "Welcome!", type: "success", isLoading:false, autoClose: 3000});
             const user = response.data;
             localStorage.setItem("blogToken", user.jwt);
-            setUserAtomState({name: user.name, email: user.email, tagline: user.tagline});
+            setUserAtomState({name: user.name, email: user.email, tagline: user.tagline, loggedIn:true});
             navigate("/blogs");
         } catch (err) {
-            alert("Login Failed!");
+            if (err instanceof Error) {
+                toast.update(id, {render: "Failed to create account!", type: "error", isLoading: false, autoClose: 3000});
+            }
         }
     }
 

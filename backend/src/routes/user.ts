@@ -62,21 +62,25 @@ userRouter.post('/signup', async (c) => {
     const tag = body.tagline || "A hero was born";
   
     try {
-      const user = await prisma.user.create({
-        data: {
-          email: body.email,
-          password: hash,
-          name: body.name,
+        let name = null;
+        if (body.name) {
+            name = body.name[0].toUpperCase() + body.name.slice(1);
         }
-      });
-  
-      const jwt = await sign({id: user.id}, c.env.SECRET);
-      return c.json({
-        jwt,
-        email: user.email,
-        name: user.name,
-        tagline: user.tagline,
-      });
+        const user = await prisma.user.create({
+            data: {
+            email: body.email,
+            password: hash,
+            name: name,
+            }
+        });
+    
+        const jwt = await sign({id: user.id}, c.env.SECRET);
+        return c.json({
+            jwt,
+            email: user.email,
+            name: user.name,
+            tagline: user.tagline,
+        });
   
     } catch (err) {
       return c.json({error:"Incomplete Registration"}, 400);

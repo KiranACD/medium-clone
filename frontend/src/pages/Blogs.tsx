@@ -1,24 +1,37 @@
-import { useRecoilValueLoadable } from "recoil"
-import { BlogCard } from "../components/BlogCard"
-import { blogsAtom } from "../state/BlogAtom"
+import { useRecoilValueLoadable } from "recoil";
 import { AppBar } from "../components/AppBar";
+import { userAtomSelector } from "../state/UserAtom";
+import { BlogsComponent } from "../components/BlogsComponent";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export const Blogs = () => {
 
-    const blogsLoadable = useRecoilValueLoadable(blogsAtom);
-    
-    return (
-        <div>
-            <AppBar />
-            <div className="flex flex-col items-center">
-                <BlogCard 
-                    authorName={"Kiran"}
-                    title={"Title of Blog"}
-                    content={"Content of Blog"}
-                    publishedDate={"2nd Feb 2024"}
-                />
+    const userLoadable = useRecoilValueLoadable(userAtomSelector);
+    const navigate = useNavigate();
+
+    if (userLoadable.state === "loading") {
+        return (
+            <div>
+                <AppBar userName={""} loggedIn={true}/>
+                <div className="flex items-center justify-center h-screen">
+                    loading...
+                </div>
             </div>
-        </div>
-    )
+        );
+    } else if (userLoadable.state === "hasValue") {
+
+        return (
+            <div>
+                <AppBar userName={userLoadable.contents.name} loggedIn={true}/>
+                <BlogsComponent />
+            </div>
+        )
+    } else {
+        toast.error("Unable to get your details", {
+            toastId: 'BlogsError',
+        });
+        navigate("/");
+    }
 }

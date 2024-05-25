@@ -18,15 +18,23 @@ export const blogRouter = new Hono<{
 blogRouter.use("/*", async (c, next) => {
     
     const authHeader = c.req.header("authorization") || "";
-    const user = await verify(authHeader, c.env.SECRET);
-    
-    if (user) {
-        c.set("userId", user.id);
-        await next();
-    } else {
+
+    try {
+        const user = await verify(authHeader, c.env.SECRET);
+        
+        if (user) {
+            c.set("userId", user.id);
+            await next();
+        } else {
+            c.status(403);
+            return c.json({
+                error: "You are not logged in!",
+            })
+        }
+    } catch (err) {
         c.status(403);
         return c.json({
-            error: "You are not logged in!",
+            error: "Unauthorized",
         })
     }
     
@@ -47,7 +55,7 @@ blogRouter.post('/', async (c) => {
             error: "Incorrect inputs",
         });
     }
-    
+
     const authorId = c.get("userId");
     const blog = await prisma.post.create({
         data: {
@@ -145,6 +153,7 @@ blogRouter.get("/:id", async (c) => {
                 author: {
                     select: {
                         name: true,
+                        tagline: true,
                     }
                 }
             }
