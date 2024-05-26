@@ -47,7 +47,6 @@ export const SigninComponent = () => {
             });
             toast.update(id, {render: "Welcome!", type: "success", isLoading:false, autoClose: 3000});
             const user = response.data;
-            console.log("user:", user);
             setUserAtomState({ name: user.name, email: user.email, tagline: user.tagline, loggedIn: true });
             navigate("/blogs");
         } catch (err) {
@@ -71,18 +70,6 @@ export const SigninComponent = () => {
                 toast.update(id, {render: `${err.message}`, type: "error", isLoading: false, autoClose: 3000});
             }
         }
-    }
-
-    const notifyError = (message: string) => {
-        toast.error(message, {
-            toastId: 'signinError',
-        });
-    }
-
-    const notify = (message: string) => {
-        toast(message, {
-            toastId: 'notify',
-        });
     }
 
     return (

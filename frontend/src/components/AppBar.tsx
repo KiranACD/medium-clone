@@ -1,14 +1,6 @@
-import { Loadable } from "recoil"
 import { Avatar } from "./Avatar"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-
-interface User {
-    email: string;
-    name: string;
-    tagline: string;
-    loggedIn: boolean;
-}
 
 export const AppBar = ({userName, loggedIn}: {userName: string, loggedIn: boolean}) => {
 

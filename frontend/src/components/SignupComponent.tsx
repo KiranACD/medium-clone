@@ -29,7 +29,6 @@ export const SignupComponent = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("blogToken");
-        console.log(token);
         if (token) {
             getUserDetails(token);
         }
@@ -43,7 +42,7 @@ export const SignupComponent = () => {
                 }
             });
             toast.success("Welcome!", {
-                toastId: "signedInSuccess",
+                toastId: "userDetailsSuccess",
             });
             const user = response.data;
             setUserAtomState({ name: user.name, email: user.email, tagline: user.tagline, loggedIn: true });
@@ -65,9 +64,6 @@ export const SignupComponent = () => {
         const id = toast.loading("Creating your account...");
         try {
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`, signUpInputs);
-            toast.success("Welcome!", {
-                toastId: "signedInSuccess",
-            });
             toast.update(id, {render: "Welcome!", type: "success", isLoading:false, autoClose: 3000});
             const user = response.data;
             localStorage.setItem("blogToken", user.jwt);

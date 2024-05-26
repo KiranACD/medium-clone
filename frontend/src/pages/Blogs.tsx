@@ -4,6 +4,7 @@ import { userAtomSelector } from "../state/UserAtom";
 import { BlogsComponent } from "../components/BlogsComponent";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { SpinnerLoading } from "../components/SpinnerLoader";
 
 
 export const Blogs = () => {
@@ -16,7 +17,7 @@ export const Blogs = () => {
             <div>
                 <AppBar userName={""} loggedIn={true}/>
                 <div className="flex items-center justify-center h-screen">
-                    loading...
+                    <SpinnerLoading />
                 </div>
             </div>
         );

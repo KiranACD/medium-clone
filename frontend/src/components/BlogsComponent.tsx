@@ -2,6 +2,7 @@ import { useRecoilValueLoadable } from "recoil"
 import { blogsAtom } from "../state/BlogAtom"
 import { BlogCard } from "./BlogCard";
 import { toast } from "react-toastify";
+import { BlogSkeleton } from "./BlogSkeleton";
 
 interface blogInterface {
     content: string;
@@ -18,11 +19,26 @@ export const BlogsComponent = () => {
 
     const blogsLoadable = useRecoilValueLoadable(blogsAtom);
 
+    // return (
+    //     <div className="flex flex-col items-center gap-10 border-b pt-5 pb-10 ">
+    //         <BlogSkeleton />
+    //         <BlogSkeleton />
+    //         <BlogSkeleton />
+    //         <BlogSkeleton />
+    //         <BlogSkeleton />
+    //         <BlogSkeleton />
+    //     </div>
+    // );
     if (blogsLoadable.state === "loading") {
         return (
-            <div className="flex items-center justify-center h-screen">
-                loading...
-            </div>
+            <div className="flex flex-col items-center gap-10 border-b pt-5 pb-10 ">
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+        </div>
         );
     } else if (blogsLoadable.state === "hasValue") {
         return (

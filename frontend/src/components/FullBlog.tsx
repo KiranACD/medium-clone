@@ -1,8 +1,8 @@
 import { useRecoilValueLoadable } from "recoil";
 import { Avatar } from "./Avatar";
 import { blogAtomFamily } from "../state/BlogAtom";
-import { AppBarSkeleton } from "./AppBarSkeleton";
 import { toast } from "react-toastify";
+import { SpinnerLoading } from "./SpinnerLoader";
 
 
 export const FullBlog = ({id}: {id: string}) => {
@@ -13,7 +13,7 @@ export const FullBlog = ({id}: {id: string}) => {
         return (
             <div>
                 <div className="flex justify-center items-center h-screen">
-                    loading...
+                    <SpinnerLoading />
                 </div>
             </div>
         )

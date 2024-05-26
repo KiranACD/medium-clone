@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useRecoilValueLoadable } from "recoil";
-import { blogAtomFamily } from "../state/BlogAtom";
 import { FullBlog } from "../components/FullBlog";
 import { AppBar } from "../components/AppBar";
 import { userAtomSelector } from "../state/UserAtom";
 import { AppBarSkeleton } from "../components/AppBarSkeleton";
 import { toast } from "react-toastify";
+import { SpinnerLoading } from "../components/SpinnerLoader";
 
 export const Blog = () => {
 
@@ -20,7 +20,7 @@ export const Blog = () => {
             <div>
                 <AppBarSkeleton />
                 <div className="flex h-screen justify-center items-center">
-                    loading...
+                    <SpinnerLoading />
                 </div>
             </div>
         )
