@@ -1,23 +1,7 @@
 {
     "routes": [
       {
-        "src": "/blogs",
-        "dest": "/"
-      },
-      {
-        "src": "/blog/*",
-        "dest": "/"
-      },
-      {
-        "src": "/signin",
-        "dest": "/"
-      },
-      {
-        "src": "/signup",
-        "dest": "/"
-      },
-      {
-        "src": "/publish",
+        "src": "/[^.]+",
         "dest": "/"
       }
     ]
