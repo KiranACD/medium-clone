@@ -6,7 +6,7 @@ export const blogsAtom = atom({
     key: "blogsAtom",
     default: selector({
         key: "blogsAtomSelector",
-        get: async ({get}) => {
+        get: async () => {
             const token = localStorage.getItem("blogToken");
             const response = await axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
                 headers : {
@@ -22,7 +22,7 @@ export const blogAtomFamily = atomFamily({
     key: "blogAtomFamily",
     default: selectorFamily({
         key: "blogAtomFamilySelector",
-        get: (id: string) => async ({get}) => {
+        get: (id: string) => async () => {
             const token = localStorage.getItem("blogToken");
             const response = await axios.get(`${BACKEND_URL}/api/v1/blog/${id}`, {
                 headers: {
